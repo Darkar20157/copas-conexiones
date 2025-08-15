@@ -1,0 +1,5 @@
+La aplicación se requiere un diseño misterioso tipo borgoña, morado, Vinotinto. Donde sea especialmente para hacer amistades, relaciones abiertas o cerradas. Principalmente va mostrar el perfil de la persona donde podrá construir su hoja de vida, no es necesario login, ni nada por el estilo. Después mostrar 3 tarjeticas de perfiles para hacer match y mostrar la información básica. Donde al seleccionar podrá ver la información detallada de la persona. Si no hacen match habrá la oportunidad de cambiar de opinión será considerado nada mas por la persona que dijo que no. Ya para finalizar el USER ADMIN podrán ayudarles con el empujoncito durante el evento. También un botón donde le diga al usuario si quiere eliminar el perfil.
+
+Considero que seria chévere dar frases de apoyo y motivación para que la persona se motive hacer match, se habilitara un botón para el administrador para que pueda habilitar el sistema de match cuando el evento empiece y que las que las personas tengan ganas de asistir.
+
+Incluir la parejas swinguer y monogámicas de manera dinámica y esencial.
