@@ -1,68 +1,246 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Agregando colores personalizados para el tema borgoña/morado/vinotinto */
+  --burgundy-50: #fdf2f8;
+  --burgundy-100: #fce7f3;
+  --burgundy-200: #fbcfe8;
+  --burgundy-300: #f9a8d4;
+  --burgundy-400: #f472b6;
+  --burgundy-500: #ec4899;
+  --burgundy-600: #db2777;
+  --burgundy-700: #be185d;
+  --burgundy-800: #9d174d;
+  --burgundy-900: #831843;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;
+  --purple-300: #d8b4fe;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7c3aed;
+  --purple-800: #6b21a8;
+  --purple-900: #581c87;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  --wine-50: #fdf4ff;
+  --wine-100: #fae8ff;
+  --wine-200: #f5d0fe;
+  --wine-300: #f0abfc;
+  --wine-400: #e879f9;
+  --wine-500: #d946ef;
+  --wine-600: #c026d3;
+  --wine-700: #a21caf;
+  --wine-800: #86198f;
+  --wine-900: #701a75;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+
+  /* Enhanced dark mode colors for burgundy/purple/wine theme */
+  --burgundy-50: #2d1b2e;
+  --burgundy-100: #3d2235;
+  --burgundy-200: #4d2a3c;
+  --burgundy-300: #5d3143;
+  --burgundy-400: #6d384a;
+  --burgundy-500: #7d3f51;
+  --burgundy-600: #8d4658;
+  --burgundy-700: #9d4d5f;
+  --burgundy-800: #ad5466;
+  --burgundy-900: #bd5b6d;
+
+  --purple-50: #2a1a3d;
+  --purple-100: #342147;
+  --purple-200: #3e2851;
+  --purple-300: #482f5b;
+  --purple-400: #523665;
+  --purple-500: #5c3d6f;
+  --purple-600: #664479;
+  --purple-700: #704b83;
+  --purple-800: #7a528d;
+  --purple-900: #845997;
+
+  --wine-50: #2e1a2e;
+  --wine-100: #382138;
+  --wine-200: #422842;
+  --wine-300: #4c2f4c;
+  --wine-400: #563656;
+  --wine-500: #603d60;
+  --wine-600: #6a446a;
+  --wine-700: #744b74;
+  --wine-800: #7e527e;
+  --wine-900: #885988;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Agregando las clases de Tailwind para los colores personalizados */
+  --color-burgundy-50: var(--burgundy-50);
+  --color-burgundy-100: var(--burgundy-100);
+  --color-burgundy-200: var(--burgundy-200);
+  --color-burgundy-300: var(--burgundy-300);
+  --color-burgundy-400: var(--burgundy-400);
+  --color-burgundy-500: var(--burgundy-500);
+  --color-burgundy-600: var(--burgundy-600);
+  --color-burgundy-700: var(--burgundy-700);
+  --color-burgundy-800: var(--burgundy-800);
+  --color-burgundy-900: var(--burgundy-900);
+
+  --color-purple-50: var(--purple-50);
+  --color-purple-100: var(--purple-100);
+  --color-purple-200: var(--purple-200);
+  --color-purple-300: var(--purple-300);
+  --color-purple-400: var(--purple-400);
+  --color-purple-500: var(--purple-500);
+  --color-purple-600: var(--purple-600);
+  --color-purple-700: var(--purple-700);
+  --color-purple-800: var(--purple-800);
+  --color-purple-900: var(--purple-900);
+
+  --color-wine-50: var(--wine-50);
+  --color-wine-100: var(--wine-100);
+  --color-wine-200: var(--wine-200);
+  --color-wine-300: var(--wine-300);
+  --color-wine-400: var(--wine-400);
+  --color-wine-500: var(--wine-500);
+  --color-wine-600: var(--wine-600);
+  --color-wine-700: var(--wine-700);
+  --color-wine-800: var(--wine-800);
+  --color-wine-900: var(--wine-900);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-  a:hover {
-    color: #747bff;
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
   }
-  button {
-    background-color: #f9f9f9;
+
+  /* Smooth transitions for theme switching */
+  html {
+    @apply scroll-smooth;
+  }
+
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/20;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-burgundy-400 dark:bg-burgundy-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-burgundy-500 dark:bg-burgundy-500;
   }
 }
