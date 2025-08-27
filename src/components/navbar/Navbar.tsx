@@ -1,17 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState } from "react";
 
-import TuneIcon from "@mui/icons-material/Tune"
-import BrightnessMediumIcon from "@mui/icons-material/BrightnessMedium"
-import PersonIcon from "@mui/icons-material/Person"
+import TuneIcon from "@mui/icons-material/Tune";
+import BrightnessMediumIcon from "@mui/icons-material/BrightnessMedium";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
+    setIsDarkMode(!isDarkMode)  
     document.documentElement.classList.toggle("dark")
   }
 
@@ -47,8 +47,8 @@ export const Navbar = () => {
                 </button>
 
                 <div className="flex items-center justify-center">
-                  <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-purple-500 transform rotate-45 flex items-center justify-center shadow-lg">
-                    <PersonIcon className="text-white text-sm transform -rotate-45" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 transform rotate-45 flex items-center justify-center shadow-lg">
+                    <FavoriteIcon width={20} className="text-white text-sm transform -rotate-45" />
                   </div>
                 </div>
 

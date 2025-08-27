@@ -4,10 +4,9 @@ import * as React from "react"
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import PersonIcon from "@mui/icons-material/Person"
-import EventIcon from "@mui/icons-material/Event"
 import { useNavigate, useLocation } from "react-router-dom"
 
-export const BarNavigation = () => {
+export const BarNavigation = ({ setCurrentPath } : { setCurrentPath: (path: string) => void }) => {
   const [value, setValue] = React.useState(0)
   const navigate = useNavigate()
   const location = useLocation()
@@ -19,7 +18,7 @@ export const BarNavigation = () => {
     else if (location.pathname.startsWith("/eventos")) setValue(2)
   }, [location.pathname])
 
-  const handleNavigation = (event: any, newValue: number) => {
+  const handleNavigation = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
     if (newValue === 0) navigate("/matches")
     if (newValue === 1) navigate("/perfil")
@@ -47,6 +46,7 @@ export const BarNavigation = () => {
             color: "#bbb",
             "&.Mui-selected": { color: "#ff4081" }, // activo
           }}
+          onClick={() => setCurrentPath("/matches")}
         />
         <BottomNavigationAction
           label="Perfil"
@@ -55,14 +55,7 @@ export const BarNavigation = () => {
             color: "#bbb",
             "&.Mui-selected": { color: "#ff4081" },
           }}
-        />
-        <BottomNavigationAction
-          label="Eventos"
-          icon={<EventIcon />}
-          sx={{
-            color: "#bbb",
-            "&.Mui-selected": { color: "#ff4081" },
-          }}
+          onClick={() => setCurrentPath("/perfil")}
         />
       </BottomNavigation>
     </Paper>
