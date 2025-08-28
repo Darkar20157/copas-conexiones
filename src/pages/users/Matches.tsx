@@ -51,7 +51,6 @@ export const Matches = () => {
     const [finished, setFinished] = useState(false);
 
     const handleSwipeLeft = (userId: string) => {
-        console.log(`Rechazado userId: ${userId}`);
         // Eliminar el usuario actual del array
         const updatedUsers = [...users];
         updatedUsers.splice(currentUserIndex, 1);
@@ -66,7 +65,7 @@ export const Matches = () => {
     }
 
     const handleSwipeRight = (userId: string) => {
-        console.log(`Le gusta userId: ${userId}`);
+        (`Le gusta userId: ${userId}`);
         // Eliminar el usuario actual del array
         const updatedUsers = [...users];
         updatedUsers.splice(currentUserIndex, 1);
@@ -80,7 +79,6 @@ export const Matches = () => {
     }
 
     const handleSuperLike = (userId: string) => {
-        console.log(`Super like userId: ${userId}`);
         // Eliminar el usuario actual del array
         const updatedUsers = [...users];
         updatedUsers.splice(currentUserIndex, 1);

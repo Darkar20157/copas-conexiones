@@ -8,20 +8,15 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  // const [isDrawerOpen, setIsDrawerOpen] = useState(false) // 🔒 Drawer deshabilitado
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)  
     document.documentElement.classList.toggle("dark")
   }
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen)
-  }
-
-  const closeDrawer = () => {
-    setIsDrawerOpen(false)
-  }
+  // const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen)
+  // const closeDrawer = () => setIsDrawerOpen(false)
 
   return (
     <>
@@ -38,20 +33,24 @@ export const Navbar = () => {
           >
             <div className="max-w-md mx-auto px-6 pt-4">
               <div className="flex items-center justify-between mt-1">
+                {/* Botón menú (deshabilitado) */}
                 <button
-                  onClick={toggleDrawer}
-                  className="p-2 text-white hover:bg-white/20 hover:text-pink-200 transition-colors rounded-md"
-                  aria-label="Abrir menú"
+                  // onClick={toggleDrawer}
+                  className="p-2 text-white hover:bg-white/20 hover:text-pink-200 transition-colors rounded-md cursor-not-allowed opacity-50"
+                  aria-label="Abrir menú (deshabilitado)"
+                  disabled
                 >
                   <TuneIcon />
                 </button>
 
+                {/* Logo */}
                 <div className="flex items-center justify-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 transform rotate-45 flex items-center justify-center shadow-lg">
                     <FavoriteIcon width={20} className="text-white text-sm transform -rotate-45" />
                   </div>
                 </div>
 
+                {/* Botón darkmode */}
                 <button
                   onClick={toggleDarkMode}
                   className="p-2 text-white hover:bg-white/20 hover:text-yellow-200 transition-colors rounded-md"
@@ -67,6 +66,8 @@ export const Navbar = () => {
 
       <div className="h-20"></div>
 
+      {/*
+      🔒 Drawer deshabilitado por ahora
       {isDrawerOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300" onClick={closeDrawer} />
       )}
@@ -91,46 +92,17 @@ export const Navbar = () => {
           </div>
 
           <div className="space-y-4">
-            <a
-              href="/matches"
-              className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10"
-              onClick={closeDrawer}
-            >
-              Matches
-            </a>
-            <a
-              href="/perfil"
-              className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10"
-              onClick={closeDrawer}
-            >
-              Perfil
-            </a>
-            <a
-              href="/eventos"
-              className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10"
-              onClick={closeDrawer}
-            >
-              Eventos
-            </a>
+            <a href="/matches" className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10" onClick={closeDrawer}>Matches</a>
+            <a href="/perfil" className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10" onClick={closeDrawer}>Perfil</a>
+            <a href="/eventos" className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10" onClick={closeDrawer}>Eventos</a>
             <div className="border-t border-white/20 pt-4 mt-6">
-              <a
-                href="/configuracion"
-                className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10"
-                onClick={closeDrawer}
-              >
-                Configuración
-              </a>
-              <a
-                href="/ayuda"
-                className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10"
-                onClick={closeDrawer}
-              >
-                Ayuda
-              </a>
+              <a href="/configuracion" className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10" onClick={closeDrawer}>Configuración</a>
+              <a href="/ayuda" className="block text-white/80 hover:text-pink-200 transition-colors py-2 px-2 rounded-md hover:bg-white/10" onClick={closeDrawer}>Ayuda</a>
             </div>
           </div>
         </div>
       </div>
+      */}
     </>
   )
 }

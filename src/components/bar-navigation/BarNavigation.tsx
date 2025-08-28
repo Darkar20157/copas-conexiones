@@ -6,7 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite"
 import PersonIcon from "@mui/icons-material/Person"
 import { useNavigate, useLocation } from "react-router-dom"
 
-export const BarNavigation = ({ setCurrentPath } : { setCurrentPath: (path: string) => void }) => {
+export const BarNavigation = () => {
   const [value, setValue] = React.useState(0)
   const navigate = useNavigate()
   const location = useLocation()
@@ -46,7 +46,7 @@ export const BarNavigation = ({ setCurrentPath } : { setCurrentPath: (path: stri
             color: "#bbb",
             "&.Mui-selected": { color: "#ff4081" }, // activo
           }}
-          onClick={() => setCurrentPath("/matches")}
+          onClick={() => navigate("/matches")}
         />
         <BottomNavigationAction
           label="Perfil"
@@ -55,7 +55,7 @@ export const BarNavigation = ({ setCurrentPath } : { setCurrentPath: (path: stri
             color: "#bbb",
             "&.Mui-selected": { color: "#ff4081" },
           }}
-          onClick={() => setCurrentPath("/perfil")}
+          onClick={() => navigate("/perfil")}
         />
       </BottomNavigation>
     </Paper>

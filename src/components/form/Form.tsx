@@ -8,10 +8,12 @@ import {
   Button,
 } from '@mui/material';
 
-export const Form = () => {
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(23);
+import type { User } from '../../interfaces/User';
+
+export const Form = ({ user }: { user: User }) => {
+  const [name, setName] = useState(user.name);
+  const [age, setAge] = useState(user.age);
+  const [description, setDescription] = useState(user.description);
   const maxChars = 200;
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +24,6 @@ export const Form = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, age, description });
     alert("Formulario enviado 🚀");
   };
 
@@ -147,7 +148,7 @@ export const Form = () => {
                 },
               }}
             >
-              Enviar
+              Guardar
             </Button>
           </Grid>
         </Grid>
