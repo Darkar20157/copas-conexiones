@@ -22,9 +22,33 @@ export const Form = ({ user }: { user: User }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Formulario enviado 🚀");
+    try {
+      const response = await fetch(`http://localhost:3000/api/users/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          age,
+          description,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error actualizando usuario");
+      }
+
+      const updatedUser = await response.json();
+      console.log("Usuario actualizado ✅", updatedUser);
+
+      alert("Usuario actualizado correctamente 🚀");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al actualizar el usuario ❌");
+    }
   };
 
   return (

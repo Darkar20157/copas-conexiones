@@ -7,14 +7,19 @@ import type { ICarouselImage } from "./cardMatches.interfaces";
 
 const ImageContainer = styled(Box)({
   position: "relative",
+  width: "100%",
   height: "70%",
+  aspectRatio: "4 / 5", // 👈 ratio fijo (puede ser 3/4, 9/16 según el estilo que quieras)
   overflow: "hidden",
+  borderRadius: "12px",
 });
 
 const CarouselImage = styled("img")({
   width: "100%",
   height: "100%",
   objectFit: "cover",
+  overflow: "hidden",
+  borderRadius: "12px", // opcional: bordes redondeados como tu Card
   transition: "transform 0.3s ease",
 });
 
@@ -40,6 +45,6 @@ export const CardImageCarousel: React.FC<ICarouselImage> = ({ photos, currentIma
         </NavigationButton>
       </>
     )}
-    <CarouselImage src={photos[currentImageIndex]} alt={`Foto ${currentImageIndex + 1}`} />
+    <CarouselImage src={'http://localhost:3000' + photos[currentImageIndex]} alt={`Foto ${currentImageIndex + 1}`} />
   </ImageContainer>
 )

@@ -1,4 +1,4 @@
-import { Box, Typography, Chip, CardContent } from "@mui/material";
+import { Box, Typography, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { IUserProfile } from "./cardMatches.interfaces";
 
@@ -43,10 +43,12 @@ export const CardContentInfo: React.FC<IUserProfile> = (props) => (
                     display: "-webkit-box",
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: "vertical",
+                    wordBreak: "break-word", // 👈 clave
                 }}
             >
                 {props.description}
             </Typography>
+
         </Box>
 
         {/* <TagsContainer>
