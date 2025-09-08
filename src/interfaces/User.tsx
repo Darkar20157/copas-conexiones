@@ -2,7 +2,7 @@ export interface User {
   id: number;
   state: string;
   name: string;
-  age: number;
+  age: Date;
   description: string;
   phone: string;
   photos?: string[];

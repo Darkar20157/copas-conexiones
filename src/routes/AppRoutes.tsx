@@ -5,6 +5,7 @@ import { Matches } from "../pages/users/Matches";
 import { Profile } from "../pages/users/Profile";
 import { BarNavigation } from "../components/bar-navigation/BarNavigation";
 import { Navbar } from "../components/navbar/Navbar";
+import { Administration } from "../pages/users/Administration";
 
 export const AppRoutes: React.FC = () => {
     const location = useLocation();
@@ -20,6 +21,7 @@ export const AppRoutes: React.FC = () => {
                     <Route path="/auth" element={<AuthStepper />} />
                     <Route path="/matches" element={<Matches />} />
                     <Route path="/perfil" element={<Profile />} />
+                    <Route path="/admin" element={<Administration />} />
                 </Routes>
             </main>
             {currentPath !== "/auth" && <BarNavigation />}
