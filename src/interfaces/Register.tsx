@@ -1,7 +1,8 @@
 export interface Register {
     name: string;
-    age: number;
+    birthdate: string;
     description: string;
     phone: string;
+    gender: string;
     password: string;
 }

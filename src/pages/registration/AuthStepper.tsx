@@ -9,13 +9,18 @@ import {
   Step,
   StepLabel,
   TextField,
-  Slider,
   Typography,
   Paper,
   Stack,
   InputAdornment,
   IconButton,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 
 import type { StepIconProps } from "@mui/material/StepIcon";
@@ -32,6 +37,9 @@ import FullScreenLoader from "../../components/full-screen-loading/FullScreenLoa
 import type { Register } from "../../interfaces/Register";
 import { HonorMention } from "../../components/honor-mention/HonorMention";
 import type { ApiResponse } from "../../interfaces/ApiResponse";
+import type { Dayjs } from "dayjs";
+import { GenderLabels } from "../../translate/GenderLabels";
+import type { Gender } from "../../types/Gender";
 
 // ---- Custom Connector ----
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -113,8 +121,9 @@ export const AuthStepper = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [age, setAge] = useState(23);
+  const [birthdate, setBirthdate] = useState<Dayjs | null>(null);
   const [description, setDescription] = useState("");
+  const [gender, setGender] = useState<Gender | "">("");
 
 
   //Handle para volver de step
@@ -170,7 +179,12 @@ export const AuthStepper = () => {
   const handleStepRegister = async () => {
     try {
       setLoading(true);
-      const register: Register = { name, age, description, phone, password };
+      if (!birthdate) {
+        alert("Debes ingresar tu fecha de nacimiento");
+        return;
+      }
+      const birthdateString = birthdate.format("YYYY-MM-DD");
+      const register: Register = { name, birthdate: birthdateString, description, phone, gender, password };
       const res = await registerService(register);
       if (res.success) {
         setActiveStep((prev) => prev + 1);
@@ -288,15 +302,29 @@ export const AuthStepper = () => {
                 InputProps={{ style: { color: "white" } }}
               />
               <Box>
-                <Typography gutterBottom sx={{ color: "var(--purple-200)" }}>Edad</Typography>
-                <Slider
-                  min={18}
-                  max={50}
-                  value={age}
-                  onChange={(_, val) => setAge(val as number)}
-                  valueLabelDisplay="auto"
-                  sx={{ color: "var(--burgundy-500)" }}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha de nacimiento"
+                    openTo="year"
+                    views={['year', 'month', 'day']}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        variant: "outlined",
+                        InputLabelProps: { style: { color: "var(--purple-200)" }, shrink: true },
+                        InputProps: { style: { color: "white" } },
+                        inputProps: { "aria-label": "fecha de nacimiento" },
+                        sx: {
+                          "& .MuiInputBase-input": { color: "white" },
+                          "& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(255,255,255,0.12)" },
+                          "& label": { color: "var(--purple-200)" },
+                        },
+                      },
+                    }}
+                    onChange={(newValue: Dayjs | null) => setBirthdate(newValue)}
+                    sx={{ width: "100%" }}
+                  />
+                </LocalizationProvider>
               </Box>
               <TextField
                 fullWidth
@@ -311,6 +339,36 @@ export const AuthStepper = () => {
                 InputLabelProps={{ style: { color: "var(--purple-200)" } }}
                 InputProps={{ style: { color: "white" } }}
               />
+              <InputLabel id="demo-select-small-label" sx={{ color: "white" }}>Género</InputLabel>
+              <Select
+                labelId="gender-label"
+                id="gender-select"
+                value={gender}
+                onChange={(e) => setGender(e.target.value as Gender)}
+                sx={{
+                  color: "white",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgba(255,255,255,0.12)",
+                  },
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      background: "linear-gradient(180deg, var(--purple-800), var(--burgundy-800))",
+                      color: "white",
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <em>Seleccione una opción</em>
+                </MenuItem>
+                {Object.entries(GenderLabels).map(([key, label]) => (
+                  <MenuItem key={key} value={key}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
             </Stack>
 
             <Stack direction="row" spacing={2} mt={3} justifyContent="center">
