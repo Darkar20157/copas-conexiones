@@ -2,8 +2,9 @@ export interface User {
   id: number;
   state: string;
   name: string;
-  age: Date;
+  birthdate: Date;
   description: string;
   phone: string;
+  gender: string;
   photos?: string[];
 }

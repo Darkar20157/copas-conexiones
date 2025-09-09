@@ -1,22 +1,41 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Grid,
   TextField,
-  Slider,
-  Typography,
   Paper,
   Button,
-} from '@mui/material';
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 
-import type { User } from '../../interfaces/User';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import type { User } from "../../interfaces/User";
+import type { Dayjs } from "dayjs";
+import { GenderLabels } from "../../translate/GenderLabels";
+import type { Gender } from "../../types/Gender";
+import dayjs from "dayjs";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const Form = ({ user }: { user: User }) => {
   const [name, setName] = useState(user.name);
-  const [age, setAge] = useState(user.age);
   const [description, setDescription] = useState(user.description);
+  const [birthdate, setBirthdate] = useState<Dayjs | null>(
+    user.birthdate ? dayjs(user.birthdate) : null
+  );
+  const [gender, setGender] = useState<Gender | "">(
+    (user.gender as Gender) || ""
+  );
+
   const maxChars = 200;
 
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.value.length <= maxChars) {
       setDescription(event.target.value);
     }
@@ -25,25 +44,23 @@ export const Form = ({ user }: { user: User }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${user.id}`, {
+      const response = await fetch(`${API_URL}/api/users/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
-          age,
           description,
+          birthdate: birthdate ? birthdate.format("YYYY-MM-DD") : null,
+          gender,
         }),
       });
 
       if (!response.ok) {
         throw new Error("Error actualizando usuario");
       }
-
-      const updatedUser = await response.json();
-      console.log("Usuario actualizado ✅", updatedUser);
-
+      await response.json();
       alert("Usuario actualizado correctamente 🚀");
     } catch (error) {
       console.error(error);
@@ -57,7 +74,8 @@ export const Form = ({ user }: { user: User }) => {
       sx={{
         p: 3,
         borderRadius: 3,
-        background: "linear-gradient(135deg, var(--burgundy-900), var(--purple-800))",
+        background:
+          "linear-gradient(135deg, var(--burgundy-900), var(--purple-800))",
         color: "white",
       }}
     >
@@ -94,28 +112,65 @@ export const Form = ({ user }: { user: User }) => {
             />
           </Grid>
 
-          {/* Edad */}
+          {/* Fecha de nacimiento */}
           <Grid size={12}>
-            <Typography gutterBottom sx={{ color: "var(--purple-200)", fontWeight: 500 }}>
-              Edad
-            </Typography>
-            <Slider
-              min={18}
-              max={50}
-              value={age}
-              onChange={(e, newValue) => setAge(newValue as number)}
-              valueLabelDisplay="auto"
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de nacimiento"
+                value={birthdate}
+                onChange={(newValue) => setBirthdate(newValue)}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    InputLabelProps: { style: { color: "var(--purple-200)" } },
+                    InputProps: {
+                      style: { color: "white", borderRadius: 12 },
+                    },
+                  },
+                }}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          {/* Género */}
+          <Grid size={12}>
+            <InputLabel
+              id="gender-label"
+              sx={{ color: "var(--purple-200)", mb: 1 }}
+            >
+              Género
+            </InputLabel>
+            <Select
+              labelId="gender-label"
+              fullWidth
+              value={gender}
+              onChange={(e) => setGender(e.target.value as Gender)}
               sx={{
-                color: "var(--burgundy-500)",
-                "& .MuiSlider-thumb": {
-                  backgroundColor: "white",
-                  border: "2px solid var(--burgundy-600)",
-                },
-                "& .MuiSlider-track": {
-                  backgroundColor: "var(--wine-500)",
+                color: "white",
+                borderRadius: 2,
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "var(--burgundy-500)",
                 },
               }}
-            />
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    background:
+                      "linear-gradient(180deg, var(--purple-800), var(--burgundy-800))",
+                    color: "white",
+                  },
+                },
+              }}
+            >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
+              {Object.entries(GenderLabels).map(([key, label]) => (
+                <MenuItem key={key} value={key}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
 
           {/* Descripción */}
@@ -164,11 +219,13 @@ export const Form = ({ user }: { user: User }) => {
                 mt: 2,
                 py: 1.2,
                 borderRadius: 3,
-                background: "linear-gradient(135deg, var(--burgundy-500), var(--purple-600))",
+                background:
+                  "linear-gradient(135deg, var(--burgundy-500), var(--purple-600))",
                 color: "white",
                 fontWeight: "bold",
                 "&:hover": {
-                  background: "linear-gradient(135deg, var(--burgundy-600), var(--purple-700))",
+                  background:
+                    "linear-gradient(135deg, var(--burgundy-600), var(--purple-700))",
                 },
               }}
             >

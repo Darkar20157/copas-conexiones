@@ -1,47 +1,48 @@
-"use users"
+"use client";
 
 import { useEffect, useState } from "react";
 import { Container, CircularProgress, Typography } from "@mui/material";
 import { Collage } from "../../components/collage/Collage";
 import { Form } from "../../components/form/Form";
-import axios from "axios";
 
-// 🔹 Define el tipo de usuario (según los campos de tu API)
-interface UserProfile {
-  id: number;
-  state: string;
-  name: string;
-  age: number;
-  description: string;
-  phone: string;
-  photos?: string[]; // si tienes imágenes, agrega este campo
-}
+import { getUserService } from "../../api/UserService"; // <-- Importa tu servicio
+import type { ApiResponse } from "../../interfaces/ApiResponse";
+import type { User } from "../../interfaces/User";
 
 export const Profile = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = JSON.parse(localStorage.getItem("userId") || '');
+  // 🔹 Obtén el userId desde localStorage
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/users/${userId}`);
-        if (res.status !== 200) {
-          throw new Error("Error al obtener usuario");
+        console.log("Hola buenas tardes");
+        const res: ApiResponse<User> = await getUserService(userId);
+        setUserProfile(res.content || null);
+      } catch (err) {
+        const error = err as ApiResponse<null>;
+
+        if (error.status === 400) {
+          alert(`${error.details}`);
+        } else {
+          alert(error.message || "Error inesperado en login");
         }
-        const data: UserProfile = await res.data;
-        setUserProfile(data);
-      } catch (err: any) {
-        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    if (userId) {
+      fetchUser();
+    } else {
+      setError("Usuario no encontrado en localStorage");
+      setLoading(false);
+    }
   }, [userId]);
 
   if (loading) {
@@ -78,10 +79,10 @@ export const Profile = () => {
         gap: 4,
       }}
     >
-      {/* Si tu API devuelve fotos, pásalas, si no, puedes omitir */}
+      {/* Si tu API devuelve fotos */}
       <Collage photos={userProfile.photos || []} />
 
-      {/* Aquí puedes pasar datos del usuario al formulario si lo requieres */}
+      {/* Pasamos el user al formulario */}
       <Form user={userProfile} />
     </Container>
   );
