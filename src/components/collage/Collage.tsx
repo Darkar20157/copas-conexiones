@@ -45,11 +45,13 @@ function getGridSize(index: number, total: number) {
   return { cols: 2, rows: 1.5 };
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos }) => {
   const [photos, setPhotos] = useState<string[]>(initialPhotos ?? []);
 
   const normalizePhotos = (photosFromDb: string[]) =>
-    photosFromDb.map((p) => (p.startsWith("http") ? p : `http://localhost:3000${p}`));
+    photosFromDb.map((p) => (p.startsWith("http") ? p : `${API_URL}${p}`));
 
   useEffect(() => {
     setPhotos(initialPhotos ? normalizePhotos(initialPhotos) : []);
@@ -88,13 +90,13 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
 
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/users/upload/photos/${userId}`,
+        `${API_URL}/api/users/upload/photos/${userId}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       const updatedPhotos: string[] = res.data.photos.map((p: string) =>
-        p.startsWith("http") ? p : `http://localhost:3000${p}`
+        p.startsWith("http") ? p : `${API_URL}${p}`
       );
 
       setPhotos(updatedPhotos);
@@ -115,12 +117,12 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
 
     try {
       const res = await axios.delete(
-        `http://localhost:3000/api/users/delete/photos/${userId}`,
+        `${API_URL}/api/users/delete/photos/${userId}`,
         { data: { photo } } // pasamos cuál foto eliminar
       );
 
       const updatedPhotos: string[] = res.data.photos.map((p: string) =>
-        p.startsWith("http") ? p : `http://localhost:3000${p}`
+        p.startsWith("http") ? p : `${API_URL}${p}`
       );
 
       setPhotos(updatedPhotos);

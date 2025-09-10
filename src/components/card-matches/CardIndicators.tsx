@@ -19,9 +19,9 @@ const Indicator = styled(Box)<{ active: boolean }>(({ active }) => ({
     transition: "background-color 0.3s ease",
 }));
 
-export const CardIndicators = ({ total, current }: { total: number; current: number }) => (
+export const CardIndicators = ({ total, current }: { total?: number; current: number }) => (
     <ImageIndicators>
-        {Array.from({ length: total }).map((_, index) => (
+        {Array.from({ length: total ?? 0 }).map((_, index) => (
             <Indicator key={index} active={index === current} />
         ))}
     </ImageIndicators>

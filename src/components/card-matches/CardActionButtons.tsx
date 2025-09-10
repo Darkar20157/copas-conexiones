@@ -15,26 +15,48 @@ const ActionButtons = styled(Box)({
 const ActionButton = styled(IconButton)<{ variant: "reject" | "like" | "superlike" }>(({ variant }) => ({
   width: 56,
   height: 56,
-  backgroundColor: variant === "reject" ? "#ff4458" : variant === "like" ? "#42c767" : "#1ec71e",
+  backgroundColor:
+    variant === "reject" ? "#ff4458" :
+    variant === "like" ? "#42c767" :
+    "#1ec71e",
   color: "white",
   boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
   "&:hover": {
-    backgroundColor: variant === "reject" ? "#e63946" : variant === "like" ? "#2d9cdb" : "#ffd700",
+    backgroundColor:
+      variant === "reject" ? "#e63946" :
+      variant === "like" ? "#2d9cdb" :
+      "#ffd700",
     transform: "scale(1.1)",
   },
   transition: "all 0.3s ease",
 }))
 
 interface Props {
-  onReject: () => void
-  onLike: () => void
-  onSuperLike: () => void
+  onReject?: () => void
+  onLike?: () => void
+  onSuperLike?: () => void
 }
 
-export const CardActionButtons: React.FC<Props> = ({ onReject, onLike, onSuperLike }) => (
+export const CardActionButtons: React.FC<Props> = ({
+  onReject,
+  onLike,
+  onSuperLike,
+}) => (
   <ActionButtons>
-    <ActionButton variant="reject" onClick={onReject}><Close /></ActionButton>
-    <ActionButton variant="superlike" onClick={onSuperLike}><Star /></ActionButton>
-    <ActionButton variant="like" onClick={onLike}><Favorite /></ActionButton>
+    {onReject && (
+      <ActionButton variant="reject" onClick={onReject}>
+        <Close />
+      </ActionButton>
+    )}
+    {onSuperLike && (
+      <ActionButton variant="superlike" onClick={onSuperLike}>
+        <Star />
+      </ActionButton>
+    )}
+    {onLike && (
+      <ActionButton variant="like" onClick={onLike}>
+        <Favorite />
+      </ActionButton>
+    )}
   </ActionButtons>
 )

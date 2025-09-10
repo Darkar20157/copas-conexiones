@@ -13,23 +13,27 @@ import { CardActionButtons } from "./CardActionButtons";
 import type { ICardMatches } from "./cardMatches.interfaces";
 
 // 🎨 Styled
-const StyledCard = styled(Card)(() => ({
-  width: "100%",
-  maxWidth: 400,
-  height: 450,
-  borderRadius: 20,
-  overflow: "hidden",
-  position: "relative",
-  boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-  cursor: "grab",
-  transition: "transform 0.3s ease, opacity 0.3s ease",
-  "&:active": { cursor: "grabbing" },
-}))
+const StyledCard = styled(Card)<{ $width?: number; $height?: number }>(
+  ({ $width = 315, $height = 450 }) => ({
+    width: $width,
+    height: $height,
+    borderRadius: 20,
+    overflow: "hidden",
+    position: "relative",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+    cursor: "grab",
+    transition: "transform 0.3s ease, opacity 0.3s ease",
+    "&:active": { cursor: "grabbing" },
+  })
+)
 
 const MotionCard = motion(StyledCard)
 
 export const CardMatches: React.FC<ICardMatches> = ({
   user,
+  type,
+  width = 315,   // 🔹 por defecto grande
+  height = 450,
   onSwipeLeft,
   onSwipeRight,
   onSuperLike,
@@ -40,7 +44,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
   const cardRef = useRef<HTMLDivElement>(null)
   const startPos = useRef({ x: 0, y: 0 })
   const controls = useAnimation()
-  
+
   // Reset animation and image index when user changes
   useEffect(() => {
     setCurrentImageIndex(0)
@@ -56,7 +60,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSwipeRight(user?.id || ""));
+      .then(() => onSwipeRight(user?.id || 0));
   }
 
   const swipeLeft = () => {
@@ -67,7 +71,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSwipeLeft(user?.id || ""))
+      .then(() => onSwipeLeft(user?.id || 0))
   }
 
   const swipeUp = () => {
@@ -78,21 +82,21 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSuperLike(user?.id || ""))
+      .then(() => onSuperLike(user?.id || 0))
   }
 
   // 🔹 Carousel navigation
   const nextImage = () => {
     if (!user?.photos?.length) return
     setCurrentImageIndex((prev) =>
-      prev === user?.photos?.length - 1 ? 0 : prev + 1
+      prev === (user?.photos?.length ?? 0) - 1 ? 0 : prev + 1
     )
   }
 
   const prevImage = () => {
     if (!user?.photos?.length) return
     setCurrentImageIndex((prev) =>
-      prev === 0 ? user?.photos?.length - 1 : prev - 1
+      prev === 0 ? (user?.photos?.length ?? 0) - 1 : prev - 1
     )
   }
 
@@ -146,6 +150,8 @@ export const CardMatches: React.FC<ICardMatches> = ({
     <Box sx={{ position: "relative", display: "flex", justifyContent: "center" }}>
       <MotionCard
         ref={cardRef}
+        $width={width}   // 🔹 ahora sí llega al styled
+        $height={height}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={(_e, info) => {
@@ -161,7 +167,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
         onTouchEnd={handleTouchEnd}
       >
         {/* 🔹 Indicadores arriba */}
-        <CardIndicators total={user.photos.length} current={currentImageIndex} />
+        <CardIndicators total={user.photos?.length ?? 0} current={currentImageIndex} />
 
         {/* 🔹 Carousel */}
         <CardImageCarousel
@@ -178,11 +184,38 @@ export const CardMatches: React.FC<ICardMatches> = ({
       </MotionCard>
 
       {/* 🔹 Botones de acción */}
-      <CardActionButtons
-        onReject={swipeLeft}
-        onLike={swipeRight}
-        onSuperLike={swipeUp}
-      />
+      {/* 🔹 Botones de acción dinámicos */}
+      {!type && (
+        <CardActionButtons
+          onReject={swipeLeft}
+          onLike={swipeRight}
+          onSuperLike={swipeUp}
+        />
+      )}
+
+      {type === "no_me_gusta" && (
+        <CardActionButtons
+          onReject={swipeLeft}
+          onLike={undefined}
+          onSuperLike={undefined}
+        />
+      )}
+
+      {type === "me_gusta" && (
+        <CardActionButtons
+          onReject={undefined}
+          onLike={swipeRight}
+          onSuperLike={undefined}
+        />
+      )}
+
+      {type === "me_encanta" && (
+        <CardActionButtons
+          onReject={undefined}
+          onLike={undefined}
+          onSuperLike={swipeUp}
+        />
+      )}
     </Box>
   )
 }

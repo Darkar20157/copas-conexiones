@@ -1,21 +1,22 @@
 export interface IUserProfile {
-  id: string
-  name: string
-  age: number
-  photos: string[]
-  description: string
-  hobbies: string[]
+  id: number;
+  name: string;
+  photos?: string[];
+  description: string;
 }
 
 export interface ICardMatches {
-  user: IUserProfile
-  onSwipeLeft: (userId: string) => void
-  onSwipeRight: (userId: string) => void
-  onSuperLike: (userId: string) => void
+  user: IUserProfile;
+  type?: "no_me_gusta" | "me_gusta" | "me_encanta";
+  width?: number;   // 🔹 nuevo
+  height?: number;  // 🔹 nuevo
+  onSwipeLeft: (id: number) => void;
+  onSwipeRight: (id: number) => void;
+  onSuperLike: (id: number) => void;
 }
 
 export interface ICarouselImage {
-  photos: string[]
+  photos?: string[]
   currentImageIndex: number
   nextImage: () => void
   prevImage: () => void
