@@ -1,29 +1,22 @@
 import { useEffect, useState } from "react";
 import { Container, Box, Typography, CircularProgress, Button } from "@mui/material";
-import axios from "axios";
 import { MatchCardPair } from "../../components/match-card-pair/MatchCardPair";
 import type { MatchCardPairProps } from "../../components/match-card-pair/MatchCardPair";
+import { getMatches } from "../../api/MatchesService";
+import { calculateAge } from "../../utils/dateUtils";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-interface MatchFromAPI {
-  id: string;
-  create_date: string;
-  update_date: string;
-  user_match_1: string;
-  user_match_2: string;
-  date_match: string | null;
-  type_liked_1: "no_me_gusta" | "me_gusta" | "me_encanta" | null;
-  type_liked_2: "no_me_gusta" | "me_gusta" | "me_encanta" | null;
-  user1_name: string;
-  user2_name: string;
-  user1_photos?: string[];
-  user2_photos?: string[];
-  user1_age?: number;
-  user2_age?: number;
-  user1_description?: string;
-  user2_description?: string;
-}
+const mapReaction = (reaction: "LIKE" | "LOVE" | "DISLIKE" | null) => {
+  switch (reaction) {
+    case "LIKE":
+      return "me_gusta";
+    case "LOVE":
+      return "me_encanta";
+    case "DISLIKE":
+      return "no_me_gusta";
+    default:
+      return null;
+  }
+};
 
 export const Administration = () => {
   const [matches, setMatches] = useState<MatchCardPairProps[]>([]);
@@ -34,38 +27,32 @@ export const Administration = () => {
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
 
-  const userId = typeof window !== "undefined"
-    ? JSON.parse(localStorage.getItem("userId") || "null")
-    : null;
-
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${API_URL}/api/matches`, {
-          params: { limit, offset: (page - 1) * limit },
-        });
+        const res = await getMatches(page - 1, limit, false);
+        setTotal(res.content?.total || 0);
 
-        setTotal(res.data.length + (page - 1) * limit);
-
-        // 🔹 Aquí mapear correctamente type_liked_1 y type_liked_2
-        const formattedMatches: MatchCardPairProps[] = res.data.map((match: MatchFromAPI) => ({
+        const formattedMatches = (res.content?.data || []).map((match): MatchCardPairProps => ({
           user1: {
-            id: match.user_match_1,
+            id: match.user1_id,
             name: match.user1_name,
-            age: match.user1_age || 0,
+            birthdate: calculateAge(match.user1_birthdate).toString(),
             description: match.user1_description || "",
             photos: match.user1_photos || [],
+            gender: ""
           },
           user2: {
-            id: match.user_match_2,
+            id: match.user2_id,
             name: match.user2_name,
-            age: match.user2_age || 0,
+            birthdate: calculateAge(match.user2_birthdate).toString(),
             description: match.user2_description || "",
             photos: match.user2_photos || [],
+            gender: ""
           },
-          type_liked_1: match.type_liked_1,
-          type_liked_2: match.type_liked_2,
+          type_liked_1: mapReaction(match.user1_reaction as "LIKE" | "LOVE" | "DISLIKE" | null),
+          type_liked_2: mapReaction(match.user2_reaction as "LIKE" | "LOVE" | "DISLIKE" | null),
         }));
 
         setMatches(formattedMatches);
@@ -78,7 +65,7 @@ export const Administration = () => {
     };
 
     fetchMatches();
-  }, [page, limit, userId]);
+  }, [page, limit]);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -113,50 +100,34 @@ export const Administration = () => {
       ))}
 
       {totalPages > 1 && (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: 2,
-      mt: 4,
-    }}
-  >
-    <Button
-      disabled={page === 1}
-      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-      sx={{
-        background: page === 1 ? "grey" : "linear-gradient(90deg, #7b5cff, #42c767)",
-        color: "white",
-        fontWeight: "bold",
-        "&:hover": {
-          background: page === 1 ? "grey" : "linear-gradient(90deg, #42c767, #7b5cff)",
-        },
-      }}
-    >
-      Anterior
-    </Button>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            mt: 4,
+          }}
+        >
+          <Button
+            disabled={page === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Anterior
+          </Button>
 
-    <Typography sx={{ minWidth: 100, textAlign: "center" }}>
-      Página {page} de {totalPages}
-    </Typography>
+          <Typography sx={{ minWidth: 100, textAlign: "center" }}>
+            Página {page} de {totalPages}
+          </Typography>
 
-    <Button
-      disabled={page === totalPages}
-      onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-      sx={{
-        background: page === totalPages ? "grey" : "linear-gradient(90deg, #7b5cff, #42c767)",
-        color: "white",
-        fontWeight: "bold",
-        "&:hover": {
-          background: page === totalPages ? "grey" : "linear-gradient(90deg, #42c767, #7b5cff)",
-        },
-      }}
-    >
-      Siguiente
-    </Button>
-  </Box>
-)}
+          <Button
+            disabled={page === totalPages}
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            Siguiente
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };
