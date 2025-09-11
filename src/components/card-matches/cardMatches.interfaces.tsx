@@ -3,6 +3,8 @@ export interface IUserProfile {
   name: string;
   photos?: string[];
   description: string;
+  birthdate: string;
+  gender: string;
 }
 
 export interface ICardMatches {

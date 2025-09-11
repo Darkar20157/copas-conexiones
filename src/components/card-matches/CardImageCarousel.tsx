@@ -1,17 +1,20 @@
 import { Box, IconButton } from "@mui/material";
-import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { ArrowBackIos, ArrowForwardIos, Image as ImageIcon } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
 import type { ICarouselImage } from "./cardMatches.interfaces";
-
 
 const ImageContainer = styled(Box)({
   position: "relative",
   width: "100%",
   height: "70%",
-  aspectRatio: "4 / 5", // 👈 ratio fijo (puede ser 3/4, 9/16 según el estilo que quieras)
+  aspectRatio: "4 / 5",
   overflow: "hidden",
   borderRadius: "12px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#f0f0f0", // fondo gris claro para placeholder
 });
 
 const CarouselImage = styled("img")({
@@ -19,7 +22,7 @@ const CarouselImage = styled("img")({
   height: "100%",
   objectFit: "cover",
   overflow: "hidden",
-  borderRadius: "12px", // opcional: bordes redondeados como tu Card
+  borderRadius: "12px",
   transition: "transform 0.3s ease",
 });
 
@@ -31,20 +34,40 @@ const NavigationButton = styled(IconButton)({
   color: "white",
   zIndex: 2,
   "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
-})
+});
 
-export const CardImageCarousel: React.FC<ICarouselImage> = ({ photos, currentImageIndex, nextImage, prevImage }) => (
-  <ImageContainer>
-    {photos.length > 1 && (
-      <>
-        <NavigationButton sx={{ left: 8 }} onClick={prevImage} size="small">
-          <ArrowBackIos fontSize="small" />
-        </NavigationButton>
-        <NavigationButton sx={{ right: 8 }} onClick={nextImage} size="small">
-          <ArrowForwardIos fontSize="small" />
-        </NavigationButton>
-      </>
-    )}
-    <CarouselImage src={'http://localhost:3000' + photos[currentImageIndex]} alt={`Foto ${currentImageIndex + 1}`} />
-  </ImageContainer>
-)
+const API_URL = import.meta.env.VITE_API_URL;
+
+export const CardImageCarousel: React.FC<ICarouselImage> = ({
+  photos,
+  currentImageIndex,
+  nextImage,
+  prevImage,
+}) => {
+  const hasPhotos = photos && photos.length > 0;
+
+  return (
+    <ImageContainer>
+      {hasPhotos ? (
+        <>
+          {photos.length > 1 && (
+            <>
+              <NavigationButton sx={{ left: 8 }} onClick={prevImage} size="small">
+                <ArrowBackIos fontSize="small" />
+              </NavigationButton>
+              <NavigationButton sx={{ right: 8 }} onClick={nextImage} size="small">
+                <ArrowForwardIos fontSize="small" />
+              </NavigationButton>
+            </>
+          )}
+          <CarouselImage
+            src={`${API_URL}${photos[currentImageIndex]}`}
+            alt={`Foto ${currentImageIndex + 1}`}
+          />
+        </>
+      ) : (
+        <ImageIcon sx={{ fontSize: 60, color: "#ccc" }} />
+      )}
+    </ImageContainer>
+  );
+};

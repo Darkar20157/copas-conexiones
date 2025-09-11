@@ -1,6 +1,16 @@
-import { Box, Typography, CardContent } from "@mui/material";
+import { useState } from "react";
+import {
+    Box,
+    Typography,
+    CardContent,
+    IconButton,
+    Dialog,
+    DialogContent,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { IUserProfile } from "./cardMatches.interfaces";
+import { calculateAge } from "../../utils/dateUtils";
 
 const ContentSection = styled(CardContent)({
     height: "30%",
@@ -12,50 +22,85 @@ const ContentSection = styled(CardContent)({
     color: "white",
 });
 
-// const TagsContainer = styled(Box)({
-//     display: "flex",
-//     flexWrap: "wrap",
-//     gap: 6,
-//     marginTop: 8,
-// });
+export const CardContentInfo: React.FC<IUserProfile> = (props) => {
+    const [open, setOpen] = useState(false);
 
-// const HobbyChip = styled(Chip)({
-//     backgroundColor: "rgba(255,255,255,0.2)",
-//     color: "white",
-//     fontSize: "0.75rem",
-//     height: 24,
-//     "& .MuiChip-label": { padding: "0 8px" },
-// });
+    const age = calculateAge(props.birthdate);
 
-export const CardContentInfo: React.FC<IUserProfile> = (props) => (
-    <ContentSection>
-        <Box>
-            <Typography variant="h5" component="h2" fontWeight="bold">
-                {props.name}, {props.age}
-            </Typography>
-            <Typography
-                variant="body2"
-                sx={{
-                    marginTop: 1,
-                    opacity: 0.9,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    wordBreak: "break-word", // 👈 clave
+    return (
+        <>
+            <ContentSection>
+                <Box>
+                    <Typography variant="h5" component="h2" fontWeight="bold">
+                        {props.name}, {age}
+                        <IconButton
+                            size="small"
+                            sx={{
+                                bgcolor: "rgba(255,255,255,0.2)",
+                                color: "white",
+                                "&:hover": { bgcolor: "rgba(255,255,255,0.35)" },
+                                ml: 1, // pequeño margen a la izquierda
+                            }}
+                            onClick={() => setOpen(true)}
+                        >
+                            <ExpandMoreIcon fontSize="small" />
+                        </IconButton>
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            marginTop: 1,
+                            opacity: 0.9,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            wordBreak: "break-word",
+                        }}
+                    >
+                        {props.description}
+                    </Typography>
+                </Box>
+            </ContentSection>
+
+            {/* 🔹 Modal con info completa */}
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                fullScreen
+                PaperProps={{
+                    sx: {
+                        bgcolor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        color: "white",
+                    },
                 }}
             >
-                {props.description}
-            </Typography>
-
-        </Box>
-
-        {/* <TagsContainer>
-            {props.hobbies.slice(0, 4).map((hobby, index) => (
-                <HobbyChip key={index} label={hobby} size="small" />
-            ))}
-            {props.hobbies.length > 4 && <HobbyChip label={`+${props.hobbies.length - 4}`} size="small" />}
-        </TagsContainer> */}
-    </ContentSection>
-)
+                <DialogContent
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100%",
+                        textAlign: "center",
+                        p: 4,
+                    }}
+                >
+                    <Typography variant="h4" fontWeight="bold" gutterBottom>
+                        {props.name}, {age}
+                    </Typography>
+                    <Typography variant="h6" gutterBottom>
+                        Género: {props.gender}
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{ mt: 2, maxWidth: 500, whiteSpace: "pre-line" }}
+                    >
+                        {props.description}
+                    </Typography>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
