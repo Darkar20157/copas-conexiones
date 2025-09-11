@@ -5,6 +5,8 @@ import { CardMatchesAdmin } from "../card-matches-admin/CardMatchesAdmin";
 import type { IUserProfile } from "../../components/card-matches/cardMatches.interfaces";
 
 export interface MatchCardPairProps {
+  id: number;
+  view_admin: boolean;
   user1: IUserProfile;
   user2: IUserProfile;
   type_liked_1?: "no_me_gusta" | "me_gusta" | "me_encanta" | null;

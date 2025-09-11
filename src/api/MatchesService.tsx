@@ -23,3 +23,10 @@ export const getMatches = async (page: number, limit: number, viewed?: boolean) 
         } as ApiResponse<null>;
     }
 };
+
+export const updateMatchView = async (matchId: number, viewAdmin: boolean) => {
+  const res = await axios.patch(`${API_URL}/api/matches/${matchId}`, {
+    view_admin: viewAdmin,
+  });
+  return res.data;
+};
