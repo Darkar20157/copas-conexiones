@@ -194,7 +194,7 @@ export const Matches = () => {
         ) : currentUser ? (
           <CardMatches
             key={currentUser.id}
-            user={currentUser}
+            user={{...currentUser, birthdate: currentUser.birthdate.toString()}}
             onSwipeLeft={() => handleSwipeLeft(currentUser.id)}
             onSwipeRight={() => handleSwipeRight(currentUser.id)}
             onSuperLike={() => handleSuperLike(currentUser.id)}

@@ -4,6 +4,7 @@ import { MatchCardPair } from "../../components/match-card-pair/MatchCardPair";
 import type { MatchCardPairProps } from "../../components/match-card-pair/MatchCardPair";
 import { getMatches } from "../../api/MatchesService";
 import { calculateAge } from "../../utils/dateUtils";
+import type { ApiResponse } from "../../interfaces/ApiResponse";
 
 const mapReaction = (reaction: "LIKE" | "LOVE" | "DISLIKE" | null) => {
   switch (reaction) {
@@ -56,9 +57,13 @@ export const Administration = () => {
         }));
 
         setMatches(formattedMatches);
-      } catch (err: any) {
-        console.error("❌ Error cargando matches:", err);
-        setError(err.message || "Error desconocido");
+      } catch (err) {
+        const error = err as ApiResponse<null>;
+        if (error.status === 400) {
+          setError(error.details || "Error desconocido");
+        }else {
+          setError(error.message || "Error desconocido");
+        }
       } finally {
         setLoading(false);
       }
@@ -87,11 +92,11 @@ export const Administration = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" sx={{fontWeight: "bold"}} gutterBottom>
         Administración de Matches
       </Typography>
 
-      {matches.length === 0 && <Typography>No hay matches disponibles</Typography>}
+      {matches.length === 0 && <Typography sx={{color: "white"}}>No hay matches disponibles</Typography>}
 
       {matches.map((match, index) => (
         <Box key={index} sx={{ mb: 4 }}>

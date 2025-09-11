@@ -32,7 +32,7 @@ const MotionCard = motion(StyledCard)
 export const CardMatches: React.FC<ICardMatches> = ({
   user,
   type,
-  width = 315,   // 🔹 por defecto grande
+  width = 315,
   height = 450,
   onSwipeLeft,
   onSwipeRight,
@@ -60,7 +60,11 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSwipeRight(user?.id || 0));
+      .then(() => {
+        if (onSwipeRight) {
+          onSwipeRight(user?.id || 0);
+        }
+      });
   }
 
   const swipeLeft = () => {
@@ -71,7 +75,11 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSwipeLeft(user?.id || 0))
+      .then(() => {
+        if (onSwipeLeft) {
+          onSwipeLeft(user?.id || 0);
+        }
+      });
   }
 
   const swipeUp = () => {
@@ -82,7 +90,11 @@ export const CardMatches: React.FC<ICardMatches> = ({
         opacity: 0,
         transition: { duration: 0.4 },
       })
-      .then(() => onSuperLike(user?.id || 0))
+      .then(() => {
+        if (onSuperLike) {
+          onSuperLike(user?.id || 0);
+        }
+      });
   }
 
   // 🔹 Carousel navigation

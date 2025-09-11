@@ -21,7 +21,6 @@ export const Profile = () => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        console.log("Hola buenas tardes");
         const res: ApiResponse<User> = await getUserService(userId);
         setUserProfile(res.content || null);
       } catch (err) {
