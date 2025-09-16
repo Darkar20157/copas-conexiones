@@ -24,7 +24,7 @@ export const HonorMention = () => {
                 component="img"
                 src="/assets/img/danny.jpg"
                 alt="Danny Alejandro"
-                sx={{ width: 80, height: 80, borderRadius: "50%", mb: 1, border: "2px solid #fff" }}
+                sx={{ width: 80, height: 80, borderRadius: "50%", mb: 1, border: "2px solid #fff", objectFit: "cover" }}
             />
             <Typography variant="subtitle1" sx={{ color: "#fff", fontWeight: "bold" }}>
                 Danny Alejandro

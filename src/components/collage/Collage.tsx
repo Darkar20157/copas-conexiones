@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
@@ -49,6 +50,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos }) => {
   const [photos, setPhotos] = useState<string[]>(initialPhotos ?? []);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
 
   const normalizePhotos = (photosFromDb: string[]) =>
     photosFromDb.map((p) => (p.startsWith("http") ? p : `${API_URL}${p}`));
@@ -72,14 +75,14 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
     if (!files || files.length === 0) return;
 
     if (photos.length >= 6) {
-      alert("Máximo 6 fotos");
+      setErrorMessage("Máximo 6 fotos");
       event.currentTarget.value = "";
       return;
     }
 
     const userId = getUserId();
     if (!userId) {
-      alert("No hay usuario logueado");
+      setErrorMessage("No hay usuario logueado");
       event.currentTarget.value = "";
       return;
     }
@@ -91,8 +94,7 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
     try {
       const res = await axios.post(
         `${API_URL}/api/users/upload/photos/${userId}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        formData
       );
 
       const updatedPhotos: string[] = res.data.photos.map((p: string) =>
@@ -102,7 +104,21 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
       setPhotos(updatedPhotos);
     } catch (err) {
       console.error("Error subiendo foto:", err);
-      alert("Error subiendo foto");
+
+      // mostramos todos los detalles posibles
+      let message = "Error subiendo foto";
+
+      if (axios.isAxiosError(err)) {
+        message += `\nMensaje: ${err.message}`;
+        if (err.response) {
+          message += `\nStatus: ${err.response.status}`;
+          message += `\nData: ${JSON.stringify(err.response.data)}`;
+        }
+      } else if (err instanceof Error) {
+        message += `\nStack: ${err.stack}`;
+      }
+
+      setErrorMessage(message);
     } finally {
       event.currentTarget.value = "";
     }
@@ -219,6 +235,16 @@ export const Collage: React.FC<{ photos: string[] }> = ({ photos: initialPhotos 
           </Button>
         </Grid>
       </Grid>
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={() => setErrorMessage(null)} severity="error" sx={{ whiteSpace: "pre-line" }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
