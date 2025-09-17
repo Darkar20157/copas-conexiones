@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
-import FavoriteIcon from "@mui/icons-material/Favorite"
-import PersonIcon from "@mui/icons-material/Person"
-import { useNavigate, useLocation } from "react-router-dom"
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import PersonIcon from "@mui/icons-material/Person";
+import PeopleIcon from '@mui/icons-material/People';
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const BarNavigation = () => {
   const [value, setValue] = React.useState(0)
@@ -16,6 +17,7 @@ export const BarNavigation = () => {
     if (location.pathname.startsWith("/matches")) setValue(0)
     else if (location.pathname.startsWith("/perfil")) setValue(1)
     else if (location.pathname.startsWith("/eventos")) setValue(2)
+    else if (location.pathname.startsWith("/reveal-matches")) setValue(3)
   }, [location.pathname])
 
   const handleNavigation = (_event: React.SyntheticEvent, newValue: number) => {
@@ -23,6 +25,7 @@ export const BarNavigation = () => {
     if (newValue === 0) navigate("/matches")
     if (newValue === 1) navigate("/perfil")
     if (newValue === 2) navigate("/eventos")
+    if (newValue === 3) navigate("/reveal-matches")
   }
 
   return (
@@ -56,6 +59,15 @@ export const BarNavigation = () => {
             "&.Mui-selected": { color: "#ff4081" },
           }}
           onClick={() => navigate("/perfil")}
+        />
+        <BottomNavigationAction
+          label="Revelaciones"
+          icon={<PeopleIcon />}
+          sx={{
+            color: "#bbb",
+            "&.Mui-selected": { color: "#ff4081" },
+          }}
+          onClick={() => navigate("/reveal-matches")}
         />
       </BottomNavigation>
     </Paper>
