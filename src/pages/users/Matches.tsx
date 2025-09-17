@@ -2,12 +2,16 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Box, Container } from "@mui/material";
+import { Box, Button, Container, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { CardMatches } from "../../components/card-matches/CardMatches";
 import axios from "axios";
 import { getUserServiceAvaibleForMatch } from "../../api/UserService";
 import type { User } from "../../interfaces/User";
+import Paper from "@mui/material/Paper";
 import { MatchAnimation } from "../../components/animations/match-animation/MatchAnimation";
+import { CardModalDetails } from "../../components/card-matches/CardModalDetails";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -17,6 +21,13 @@ export const Matches = () => {
   const [finished, setFinished] = useState(false);
   const [offset, setOffset] = useState(0);
   const [showMatchAnimation, setShowMatchAnimation] = useState(false);
+
+
+  //Modal
+  const [openModal, setOpenModal] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
 
   const limit = 5;
 
@@ -194,15 +205,58 @@ export const Matches = () => {
         ) : currentUser ? (
           <CardMatches
             key={currentUser.id}
-            user={{...currentUser, birthdate: currentUser.birthdate.toString()}}
+            user={{ ...currentUser, birthdate: currentUser.birthdate.toString() }}
             onSwipeLeft={() => handleSwipeLeft(currentUser.id)}
             onSwipeRight={() => handleSwipeRight(currentUser.id)}
             onSuperLike={() => handleSuperLike(currentUser.id)}
+            setOpenModal={setOpenModal}
           />
         ) : (
           <p style={{ color: "white" }}>No hay usuarios por mostrar</p>
         )}
       </Box>
+      {openModal && (
+        <Dialog
+          fullScreen={fullScreen}
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          aria-labelledby="responsive-dialog-title"
+          // 👇 Forzar a usar Paper y poder darle estilos
+          slots={{ paper: Paper }}
+          slotProps={{
+            paper: {
+              sx: {
+                background: "linear-gradient(135deg, #4b002d, #3b005e)",
+                color: "var(--color-card-foreground)",
+                borderRadius: "20px", 
+                boxShadow: "0px 8px 30px rgba(0,0,0,0.5)",
+                p: 2,
+                transition: "all 0.3s ease-in-out",
+              },
+            },
+          }}
+        >
+          <DialogContent>
+            {currentUser && <CardModalDetails user={currentUser} />}
+          </DialogContent>
+
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#ff4081",
+                borderRadius: 20,
+                textTransform: "none",
+                px: 3,
+                "&:hover": { backgroundColor: "#f50057" },
+              }}
+              onClick={() => setOpenModal(false)}
+            >
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Container>
   );
 };

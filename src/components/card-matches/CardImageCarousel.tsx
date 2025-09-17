@@ -10,7 +10,7 @@ const ImageContainer = styled(Box)({
   height: "70%",
   aspectRatio: "4 / 5",
   overflow: "hidden",
-  borderRadius: "12px",
+  borderRadius: "12px 12px 0px 0px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -22,7 +22,7 @@ const CarouselImage = styled("img")({
   height: "100%",
   objectFit: "cover",
   overflow: "hidden",
-  borderRadius: "12px",
+  borderRadius: "12px 12px 0px 0px",
   transition: "transform 0.3s ease",
 });
 

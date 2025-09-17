@@ -15,6 +15,7 @@ export interface ICardMatches {
   onSwipeLeft?: (id: number) => void;
   onSwipeRight?: (id: number) => void;
   onSuperLike?: (id: number) => void;
+  setOpenModal: (open: boolean) => void;
 }
 
 export interface ICarouselImage {

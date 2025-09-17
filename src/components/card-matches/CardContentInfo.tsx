@@ -1,16 +1,13 @@
-import { useState } from "react";
 import {
     Box,
     Typography,
     CardContent,
-    IconButton,
-    Dialog,
-    DialogContent,
-} from "@mui/material";
+    IconButton
+} from "@mui/material"; 
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { IUserProfile } from "./cardMatches.interfaces";
-import { calculateAge } from "../../utils/dateUtils";
+import { calculateAge } from "../../utils/utils";
 
 const ContentSection = styled(CardContent)({
     height: "30%",
@@ -22,17 +19,17 @@ const ContentSection = styled(CardContent)({
     color: "white",
 });
 
-export const CardContentInfo: React.FC<IUserProfile> = (props) => {
-    const [open, setOpen] = useState(false);
+export const CardContentInfo: React.FC<IUserProfile & { setOpenModal: (open: boolean) => void }> = (props) => {
+    const { name, birthdate, description, setOpenModal } = props;
 
-    const age = calculateAge(props.birthdate);
+    const age = calculateAge(birthdate);
 
     return (
         <>
             <ContentSection>
                 <Box>
                     <Typography variant="h5" component="h2" fontWeight="bold">
-                        {props.name}, {age}
+                        {name}, {age}
                         <IconButton
                             size="small"
                             sx={{
@@ -41,7 +38,7 @@ export const CardContentInfo: React.FC<IUserProfile> = (props) => {
                                 "&:hover": { bgcolor: "rgba(255,255,255,0.35)" },
                                 ml: 1, // pequeño margen a la izquierda
                             }}
-                            onClick={() => setOpen(true)}
+                            onClick={() => setOpenModal(true)}
                         >
                             <ExpandMoreIcon fontSize="small" />
                         </IconButton>
@@ -59,48 +56,10 @@ export const CardContentInfo: React.FC<IUserProfile> = (props) => {
                             wordBreak: "break-word",
                         }}
                     >
-                        {props.description}
+                        {description}
                     </Typography>
                 </Box>
             </ContentSection>
-
-            {/* 🔹 Modal con info completa */}
-            <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
-                fullScreen
-                PaperProps={{
-                    sx: {
-                        bgcolor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                        color: "white",
-                    },
-                }}
-            >
-                <DialogContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: "100%",
-                        textAlign: "center",
-                        p: 4,
-                    }}
-                >
-                    <Typography variant="h4" fontWeight="bold" gutterBottom>
-                        {props.name}, {age}
-                    </Typography>
-                    <Typography variant="h6" gutterBottom>
-                        Género: {props.gender}
-                    </Typography>
-                    <Typography
-                        variant="body1"
-                        sx={{ mt: 2, maxWidth: 500, whiteSpace: "pre-line" }}
-                    >
-                        {props.description}
-                    </Typography>
-                </DialogContent>
-            </Dialog>
         </>
     );
 };

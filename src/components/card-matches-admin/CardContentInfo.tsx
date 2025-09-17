@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import type { IUserProfile } from "./cardMatches.interfaces";
+import { calculateAge } from "../../utils/utils";
 
 const ContentSection = styled(CardContent)({
     height: "30%",
@@ -17,15 +18,17 @@ const ContentSection = styled(CardContent)({
 });
 
 export const CardContentInfo: React.FC<IUserProfile> = (props) => {
+    const { name, birthdate } = props;
+    const age = calculateAge(birthdate);
     return (
         <>
             <ContentSection>
                 <Box>
                     <Typography variant="h6" component="h2" fontWeight="bold" sx={{ fontSize: 14, textAlign: "center" }}>
-                        {props.name}
+                        {name}
                     </Typography>
                     <Typography variant="h6" component="h2" fontWeight="bold" sx={{ fontSize: 14, textAlign: "center" }}>
-                        Años {props.birthdate}
+                        Años {age}
                     </Typography>
                 </Box>
             </ContentSection>

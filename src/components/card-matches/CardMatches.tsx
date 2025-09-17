@@ -37,6 +37,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
   onSwipeLeft,
   onSwipeRight,
   onSuperLike,
+  setOpenModal,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -162,7 +163,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
     <Box sx={{ position: "relative", display: "flex", justifyContent: "center" }}>
       <MotionCard
         ref={cardRef}
-        $width={width}   // 🔹 ahora sí llega al styled
+        $width={width}
         $height={height}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
@@ -192,6 +193,7 @@ export const CardMatches: React.FC<ICardMatches> = ({
         {/* 🔹 Info */}
         <CardContentInfo
           {...user}
+          setOpenModal={setOpenModal}
         />
       </MotionCard>
 

@@ -10,6 +10,7 @@ export interface Match {
     user1_description: string;
     user1_birthdate: Date;
     user1_photos: string[];
+    user1_gender: string;
     user1_reaction: string;
     user2_id: number;
     user2_name: string;
@@ -17,5 +18,6 @@ export interface Match {
     user2_description: string;
     user2_birthdate: Date;
     user2_photos: string[];
+    user2_gender: string;
     user2_reaction: string;
 }

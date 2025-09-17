@@ -8,14 +8,22 @@ import {
   Card,
   CardContent,
   CardActions,
+  DialogActions,
+  Dialog,
+  DialogContent,
+  Paper,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { MatchCardPair } from "../../components/match-card-pair/MatchCardPair";
 import type { MatchCardPairProps } from "../../components/match-card-pair/MatchCardPair";
 import { getMatches, updateMatchView } from "../../api/MatchesService";
-import { calculateAge } from "../../utils/dateUtils";
 import type { ApiResponse } from "../../interfaces/ApiResponse";
+import { CardModalDetails } from "../../components/card-matches/CardModalDetails";
+import type { IUserProfile } from "../../components/card-matches/cardMatches.interfaces";
+import type { User } from "../../interfaces/User";
 
 const mapReaction = (reaction: "LIKE" | "LOVE" | "DISLIKE" | null) => {
   switch (reaction) {
@@ -31,16 +39,24 @@ const mapReaction = (reaction: "LIKE" | "LOVE" | "DISLIKE" | null) => {
 };
 
 export const Administration = () => {
+  //Listar matches
   const [matches, setMatches] = useState<MatchCardPairProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<(User | null)[]>([]);
 
+  //Paginar los usuarios
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
 
   // estado para filtro
   const [filter, setFilter] = useState<"all" | "seen" | "not_seen">("all");
+
+  //Modal
+  const [openModal, setOpenModal] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -55,18 +71,18 @@ export const Administration = () => {
             user1: {
               id: match.user1_id,
               name: match.user1_name,
-              birthdate: calculateAge(match.user1_birthdate).toString(),
+              birthdate: match.user1_birthdate.toString(),
               description: match.user1_description || "",
               photos: match.user1_photos || [],
-              gender: "",
+              gender: match.user1_gender,
             },
             user2: {
               id: match.user2_id,
               name: match.user2_name,
-              birthdate: calculateAge(match.user2_birthdate).toString(),
+              birthdate: match.user2_birthdate.toString(),
               description: match.user2_description || "",
               photos: match.user2_photos || [],
-              gender: "",
+              gender: match.user2_gender,
             },
             type_liked_1: mapReaction(
               match.user1_reaction as "LIKE" | "LOVE" | "DISLIKE" | null
@@ -108,6 +124,13 @@ export const Administration = () => {
     }
   };
 
+  const handleOpenModal = (user1: IUserProfile, user2: IUserProfile) => {
+    const user1Final: User = { ...user1, state: "", phone: "", birthdate: new Date(user1.birthdate), gender: user1.gender };
+    const user2Final: User = { ...user2, state: "", phone: "", birthdate: new Date(user2.birthdate), gender: user2.gender };
+    setCurrentUser([user1Final, user2Final]);
+    setOpenModal(true);
+  };
+
   // aplicar filtro
   const filteredMatches = matches.filter((m) => {
     if (filter === "seen") return m.view_admin;
@@ -143,24 +166,24 @@ export const Administration = () => {
           variant={filter === "seen" ? "contained" : "outlined"}
           startIcon={<VisibilityIcon />}
           onClick={() => setFilter("seen")}
-          sx={{color: "white"}}
+          sx={{ color: "white" }}
         >
-        Vistos
+          Vistos
         </Button>
 
         <Button
           variant={filter === "not_seen" ? "contained" : "outlined"}
           startIcon={<VisibilityOffIcon />}
           onClick={() => setFilter("not_seen")}
-          sx={{color: "white"}}
+          sx={{ color: "white" }}
         >
-        No Vistos
+          No Vistos
         </Button>
 
         <Button
           variant={filter === "all" ? "contained" : "outlined"}
           onClick={() => setFilter("all")}
-          sx={{color: "white"}}
+          sx={{ color: "white" }}
         >
           Todos
         </Button>
@@ -191,7 +214,14 @@ export const Administration = () => {
           <CardContent>
             <MatchCardPair {...match} />
           </CardContent>
-          <CardActions sx={{ justifyContent: "center" }}>
+          <CardActions sx={{ justifyContent: "center", marginTop: 2 }}>
+            <Button
+              variant="contained"
+              color={"primary"}
+              onClick={() => handleOpenModal(match.user1, match.user2)}
+            >
+              Detalles
+            </Button>
             <Button
               variant="contained"
               color={match.view_admin ? "success" : "error"}
@@ -234,6 +264,66 @@ export const Administration = () => {
             Siguiente
           </Button>
         </Box>
+      )}
+
+      {openModal && (
+        <Dialog
+          fullScreen={fullScreen}
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          aria-labelledby="responsive-dialog-title"
+          slots={{ paper: Paper }}
+          scroll="paper" // 👈 habilita scroll en el contenido
+          slotProps={{
+            paper: {
+              sx: {
+                background: "linear-gradient(135deg, #4b002d, #3b005e)",
+                color: "var(--color-card-foreground)",
+                borderRadius: "20px",
+                boxShadow: "0px 8px 30px rgba(0,0,0,0.5)",
+                p: 2,
+                transition: "all 0.3s ease-in-out",
+                maxHeight: "70vh", // o "80vh"
+                overflowY: "auto",
+              },
+            },
+          }}
+        >
+          <DialogContent dividers>
+            {currentUser[0] && (
+              <Box sx={{marginBottom: 2, marginTop: 2}}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "white" }} gutterBottom>
+                  Detalles del Match Usuario 1
+                </Typography>
+                <CardModalDetails user={currentUser[0]} />
+              </Box>
+            )}
+            {currentUser[1] && (
+              <Box sx={{marginBottom: 2, marginTop: 2}}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "white" }} gutterBottom>
+                  Detalles del Match Usuario 2
+                </Typography>
+                <CardModalDetails user={currentUser[1]} />
+              </Box>
+            )}
+          </DialogContent>
+
+          <DialogActions sx={{ justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#ff4081",
+                borderRadius: 20,
+                textTransform: "none",
+                px: 3,
+                "&:hover": { backgroundColor: "#f50057" },
+              }}
+              onClick={() => setOpenModal(false)}
+            >
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </Container>
   );
