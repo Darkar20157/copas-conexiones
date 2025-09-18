@@ -7,6 +7,8 @@ import { BarNavigation } from "../components/bar-navigation/BarNavigation";
 import { Navbar } from "../components/navbar/Navbar";
 import { Administration } from "../pages/users/Administration";
 import { RevealMatches } from "../pages/users/RevealMatch";
+import { Roulette } from "../pages/users/Roulette";
+import { ConfigureRoulette } from "../pages/users/ConfigureRoulette";
 
 export const AppRoutes: React.FC = () => {
     const location = useLocation();
@@ -24,6 +26,9 @@ export const AppRoutes: React.FC = () => {
                     <Route path="/perfil" element={<Profile />} />
                     <Route path="/reveal-matches" element={<RevealMatches />} />
                     <Route path="/admin" element={<Administration />} />
+                    <Route path="/roulette" element={<Roulette />} />
+                    <Route path="/roulette/configure" element={<ConfigureRoulette />} />
+                    
                 </Routes>
             </main>
             {currentPath !== "/auth" && <BarNavigation />}
